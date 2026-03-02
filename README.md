@@ -29,21 +29,27 @@ poetry run uvicorn src.presentation.api:app --reload
 
 ```
 ## Пример запроса.
+
 #Endpoint: POST /predict
+
 #Request body (application json): 
 ```json
-#{
+{
   "experience": 1,
   "city": "Moscow",
   "position": "Junior Data Scientist",
   "skills": "Python"
 }
+```
+```json
 {
   "experience": 4,
   "city": "Moscow",
   "position": "ML Engineer",
   "skills": "Python"
 }
+```
+```json
 {
   "experience": 5,
   "city": "SPb",
@@ -52,7 +58,10 @@ poetry run uvicorn src.presentation.api:app --reload
 }
 ```
 Пример ответа (JSON):
+```json
 {
   "predicted_salary": 183333.33
 }
+```
+
 
