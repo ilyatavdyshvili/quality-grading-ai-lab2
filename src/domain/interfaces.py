@@ -1,7 +1,19 @@
 from abc import ABC, abstractmethod
-from .entities import ProductSample, QualityGrade
 
-class IQualityClassifier(ABC):
+
+class IDataStorage(ABC):
+
     @abstractmethod
-    def evaluate(self, sample: ProductSample) -> QualityGrade:
+    def download_file(self, remote_path: str, local_path: str) -> None:
+        pass
+
+    @abstractmethod
+    def upload_file(self, local_path: str, remote_path: str) -> None:
+        pass
+
+
+class ISalaryPredictor(ABC):
+
+    @abstractmethod
+    def predict(self, experience: int) -> float:
         pass

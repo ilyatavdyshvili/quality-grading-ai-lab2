@@ -1,13 +1,33 @@
 from fastapi import FastAPI
-from src.domain.entities import ProductSample
-from src.infrastructure.mock_classifier import FormulaClassifier
-from src.application.services import QualityControlService
+from pydantic import BaseModel
+import os
+from dotenv import load_dotenv
+
+from src.infrastructure.storage import S3Storage
+from src.application.services import DataSyncService, SalaryPredictionService
+
+load_dotenv()
 
 app = FastAPI()
-classifier = FormulaClassifier()
-service = QualityControlService(classifier)
 
-@app.post("/evaluate")
-def evaluate(sample: ProductSample):
-    result = service.evaluate_sample(sample)
-    return result.dict()
+
+class SalaryRequest(BaseModel):
+    experience: int
+
+
+# Dependency Injection
+storage = S3Storage(
+    endpoint_url=os.getenv("MINIO_ENDPOINT"),
+    access_key=os.getenv("MINIO_ACCESS_KEY"),
+    secret_key=os.getenv("MINIO_SECRET_KEY"),
+    bucket=os.getenv("MINIO_BUCKET")
+)
+
+sync_service = DataSyncService(storage)
+salary_service = SalaryPredictionService(sync_service)
+
+
+@app.post("/predict")
+def predict_salary(request: SalaryRequest):
+    prediction = salary_service.predict_salary(request.experience)
+    return {"predicted_salary": prediction}

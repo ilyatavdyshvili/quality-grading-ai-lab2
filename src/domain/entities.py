@@ -1,10 +1,10 @@
-from pydantic import BaseModel
+from dataclasses import dataclass
 
-class ProductSample(BaseModel):
-    acidity: float
-    density: float
-    alcohol_content: float
 
-class QualityGrade(BaseModel):
-    score: float
-    label: str
+@dataclass
+class JobRecord:
+    experience: int
+    city: str
+    position: str
+    skills: str
+    salary: float
